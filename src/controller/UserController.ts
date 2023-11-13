@@ -2,13 +2,21 @@ import { Request, Response } from "express"
 import { UserDatabase } from "../database/UserDatabase"
 import { User } from "../models/User"
 import { UserDB } from "../types"
+import { UserBusiness } from "../business/UserBusiness"
 
 export class UserController {
     public getUsers = async (req: Request, res: Response) => {
         try {
-            const q = req.query.q as string | undefined
+            //const q = req.query.q as string | undefined
     
-            const userDatabase = new UserDatabase()
+            const input = {
+                q: req.query.q as string | undefined
+            }
+
+            const userBusiness = new UserBusiness()
+            const response = await userBusiness.getUsers(input)
+
+            /* const userDatabase = new UserDatabase()
             const usersDB = await userDatabase.findUsers(q)
     
             const users: User[] = usersDB.map((userDB) => new User(
@@ -19,7 +27,8 @@ export class UserController {
                 userDB.created_at
             ))
     
-            res.status(200).send(users)
+            res.status(200).send(users) */
+            res.status(200).send(response)
         } catch (error) {
             console.log(error)
     
@@ -37,9 +46,16 @@ export class UserController {
 
     public createUser = async (req: Request, res: Response) => {
         try {
-            const { id, name, email, password } = req.body
+            //const { id, name, email, password } = req.body
+
+            const input = {
+                id: req.body.id,
+                name:req.body.email,
+                email: req.body.email,
+                password: req.body.password
+            }
     
-            if (typeof id !== "string") {
+            /* if (typeof id !== "string") {
                 res.status(400)
                 throw new Error("'id' deve ser string")
             }
@@ -73,9 +89,9 @@ export class UserController {
                 email,
                 password,
                 new Date().toISOString()
-            ) // yyyy-mm-ddThh:mm:sssZ
+            ) // yyyy-mm-ddThh:mm:sssZ */
     
-            const newUserDB: UserDB = {
+            /* const newUserDB: UserDB = {
                 id: newUser.getId(),
                 name: newUser.getName(),
                 email: newUser.getEmail(),
@@ -83,9 +99,13 @@ export class UserController {
                 created_at: newUser.getCreatedAt()
             }
     
-            await userDatabase.insertUser(newUserDB)
+            await userDatabase.insertUser(newUserDB) */
+
+            const userBusiness = new UserBusiness()
+            const output = await userBusiness.createUser(input)
     
-            res.status(201).send(newUser)
+            //res.status(201).send(newUser)
+            res.status(201).send(output)
         } catch (error) {
             console.log(error)
     

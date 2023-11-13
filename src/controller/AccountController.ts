@@ -2,11 +2,12 @@ import { Request, Response } from "express"
 import { AccountDatabase } from "../database/AccountDatabase"
 import { Account } from "../models/Account"
 import { AccountDB } from "../types"
+import { AccountBusiness } from "../business/AcoountBusiness"
 
 export class AccountController {
     public getAccounts = async (req: Request, res: Response) => {
         try {
-            const accountDatabase = new AccountDatabase()
+           /*  const accountDa0tabase = new AccountDatabase()
             const accountsDB: AccountDB[] = await accountDatabase.findAccounts()
     
             const accounts = accountsDB.map((accountDB) => new Account(
@@ -14,9 +15,17 @@ export class AccountController {
                 accountDB.balance,
                 accountDB.owner_id,
                 accountDB.created_at
-            ))
+            )) */
+
+            const input = {}
+
+            const accountBusiness = new AccountBusiness()
+            const output = await accountBusiness.getAccounts(input)
     
-            res.status(200).send(accounts)
+            //res.status(200).send(accounts)
+
+            res.status(200).send(output)
+        
         } catch (error) {
             console.log(error)
     
@@ -34,9 +43,13 @@ export class AccountController {
 
     public getAccountBalance = async (req: Request, res: Response) => {
         try {
-            const id = req.params.id
+            //const id = req.params.id
+
+            const input = {
+                id: req.params.id
+            }
     
-            const accountDatabase = new AccountDatabase()
+            /* const accountDatabase = new AccountDatabase()
             const accountDB = await accountDatabase.findAccountById(id)
     
             if (!accountDB) {
@@ -51,9 +64,14 @@ export class AccountController {
                 accountDB.created_at
             )
     
-            const balance = account.getBalance()
+            const balance = account.getBalance() */
+
+            const accountBusiness = new AccountBusiness()
+            const output = await accountBusiness.getAccountBalance(input)
     
-            res.status(200).send({ balance })
+            //res.status(200).send({ balance })
+
+            res.status(200).send(output)
         } catch (error) {
             console.log(error)
     
@@ -71,9 +89,14 @@ export class AccountController {
 
     public createAccount = async (req: Request, res: Response) => {
         try {
-            const { id, ownerId } = req.body
+            //const { id, ownerId } = req.body
+
+            const input = {
+                id: req.body.id,
+                ownerId: req.body.ownerId
+            }
     
-            if (typeof id !== "string") {
+            /* if (typeof id !== "string") {
                 res.status(400)
                 throw new Error("'id' deve ser string")
             }
@@ -103,11 +126,16 @@ export class AccountController {
                 balance: newAccount.getBalance(),
                 owner_id: newAccount.getOwnerId(),
                 created_at: newAccount.getCreatedAt()
-            }
+            } */
     
-            await accountDatabase.insertAccount(newAccountDB)
+            //await accountDatabase.insertAccount(newAccountDB)
     
-            res.status(201).send(newAccount)
+           const accountBusiness = new AccountBusiness()
+           const output = await accountBusiness.createAccount(input)
+            
+            //res.status(201).send(newAccount)
+
+            res.status(201).send(output)
         } catch (error) {
             console.log(error)
     
@@ -125,10 +153,15 @@ export class AccountController {
 
     public editAccountBalance = async (req: Request, res: Response) => {
         try {
-            const id = req.params.id
-            const value = req.body.value
+            /* const id = req.params.id
+            const value = req.body.value */
+
+            const input = {
+                id: req.params.id,
+                value: req.body.value
+            }
     
-            if (typeof value !== "number") {
+            /* if (typeof value !== "number") {
                 res.status(400)
                 throw new Error("'value' deve ser number")
             }
@@ -151,9 +184,14 @@ export class AccountController {
             const newBalance = account.getBalance() + value
             account.setBalance(newBalance)
     
-            await accountDatabase.updateBalanceById(id, newBalance)
+            await accountDatabase.updateBalanceById(id, newBalance) */
     
-            res.status(200).send(account)
+            const accountBusiness = new AccountBusiness()
+            const output = await accountBusiness.editAccountBalance(input)    
+
+            //res.status(200).send(account)
+
+            res.status(200).send(output)
         } catch (error) {
             console.log(error)
     
